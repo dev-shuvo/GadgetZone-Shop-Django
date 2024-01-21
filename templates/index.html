@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+{% block title %}Buy Gadgets and Accessories{% endblock title %}
+{% load static %}
+{% block content %}
+
+<!-- slider section -->
+<section id="slider-section" class="bg-primary">
+  <div class="container-fluid px-4">
+    <div id="mainSlider" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button
+          type="button"
+          data-bs-target="#mainSlider"
+          data-bs-slide-to="0"
+          class="active"
+        ></button>
+        <button
+          type="button"
+          data-bs-target="#mainSlider"
+          data-bs-slide-to="1"
+        ></button>
+        <button
+          type="button"
+          data-bs-target="#mainSlider"
+          data-bs-slide-to="2"
+        ></button>
+      </div>
+
+      <div class="carousel-inner">
+        <!-- single item -->
+        {% for product in featured_products %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+          <div class="row align-items-center">
+            <div class="col-12 col-md-6">
+              <div class="slider-img mb-5 mb-md-0">
+                {% if product.image %}
+                <img src="{{product.image.url}}" alt="" />
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="slider-text text-white text-center text-md-start">
+                <h2 class="fw-bold mb-2">{{product.title}}</h2>
+                <div
+                  class="d-flex align-items-center mb-2 justify-content-center justify-content-md-start"
+                  style="font-size: 14px"
+                >
+                  <span>{{product.product.product_feature_1}}</span>
+                  <span class="mx-1">&bull;</span>
+                  <span>{{product.product.product_feature_2}}</span>
+                  {% if product.product.warranty %}
+                  <span class="mx-1">&bull;</span>
+                  <span>{{product.product.warranty}} Year Warranty</span>
+                  {% endif %}
+                </div>
+                <p class="h1 fst-italic mb-4">
+                  ${{product.product.discount_price}}
+                  {% if product.product.price %}
+                  <del class="h5 fw-normal">${{product.product.price}}</del>
+                  {% endif %}
+                </p>
+                <a
+                  href="{{product.product.get_url}}"
+                  class="btn btn-outline-light"
+                  style="
+                    --bs-btn-padding-y: 0.5rem;
+                    --bs-btn-padding-x: 2rem;
+                    --bs-btn-font-size: 1.5rem;
+                  "
+                  >Buy Now</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        <!-- single item end -->
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#mainSlider"
+        data-bs-slide="prev"
+      >
+        <span class="bi bi-chevron-left"></span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#mainSlider"
+        data-bs-slide="next"
+      >
+        <span class="bi bi-chevron-right"></span>
+      </button>
+    </div>
+  </div>
+</section>
+<!-- slider section end -->
+
+<!-- popular categories section -->
+<section id="popular-categories-section" class="py-5">
+  <div class="container-fluid px-4">
+    <h4 class="fw-bold mb-3">
+      Popular <span class="text-primary">Categories</span>
+    </h4>
+    <div class="row mx-0">
+      {% for category in popular_categories %}
+      <a href="{{category.get_url}}" class="col-4 col-md-2 p-0">
+        <div class="single-item">
+          {% if category.category_image %}
+          <img src="{{category.category_image.url}}" alt="" />
+          {% else %}
+          <img src="{% static "images/image-placeholder.png" %}" alt="" />
+          {% endif %}
+          <span>{{category.category_name}}</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!-- popular categories section end -->
+
+<!-- best sellers section -->
+<section id="best-sellers-section" class="py-5">
+  <div class="container-fluid px-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="fw-bold">Best <span class="text-primary">Sellers</span></h4>
+      <a class="link-dark" href="{% url "search" %}?order_by=best_sellers"
+        >View All <i class="bi bi-chevron-right"></i
+      ></a>
+    </div>
+
+    <div id="bestSellers" class="owl-carousel owl-theme">
+      <!-- single item -->
+      {% for product in products %}
+      {% if product.best_seller %}
+       <div class="single-item">
+          <div class="card rounded-0">
+            <div class="card-img-wrapper">
+              <a href="{{product.get_url}}">
+                {% if product.product_image_1 %}
+                <img class="border-bottom" src="{{product.product_image_1.url}}" alt="" />
+                {% endif %}
+              </a>
+              <span class="best-badge"><i class="bi bi-award"></i></span>
+            </div>
+            <div class="card-body">
+              <div class="row align-items-center mb-3">
+                <div class="col">
+                  <a
+                    class="link-dark fw-bold"
+                    href="{{product.get_url}}"
+                    style="font-size: 14px"
+                    >{{product.product_name}}</a
+                  >
+                </div>
+                <div class="col-auto">
+                  <span
+                    ><i class="bi bi-star-fill me-1 text-warning"></i
+                    >{{product.average_review}}</span
+                  >
+                </div>
+              </div>
+              <div class="row align-items-center">
+                <div class="col">
+                  <p class="h5 fw-bold">
+                    ${{product.discount_price}}
+                    {% if product.price %}
+                    <del class="h6 fw-normal">${{product.price}}</del>
+                    {% endif %}
+                  </p>
+                </div>
+                <div class="col-auto">
+                  <a
+                    class="btn btn-sm btn-dark"
+                    href="{{product.get_url}}"
+                    >View Product</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+      <!-- single item end -->
+    </div>
+  </div>
+</section>
+<!-- best sellers section end -->
+
+<!-- new arrivals section -->
+<section id="new-arrivals-section" class="py-5">
+  <div class="container-fluid px-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="fw-bold">New <span class="text-primary">Arrivals</span></h4>
+      <a class="link-dark" href="{% url "store" %}"
+        >View All <i class="bi bi-chevron-right"></i
+      ></a>
+    </div>
+
+    <div class="row">
+      <!-- single item -->
+      {% for product in new_launches %}
+      <div class="col-12 col-sm-6 col-lg-3 mb-4">
+         <div class="single-item">
+            <div class="card rounded-0">
+              <div class="card-img-wrapper">
+                <a href="{{product.get_url}}">
+                  {% if product.product_image_1 %}
+                  <img class="border-bottom" src="{{product.product_image_1.url}}" alt="" />
+                  {% endif %}
+                </a>
+                <span class="new-badge"
+                ><i class="bi bi-rocket-takeoff-fill"></i
+              ></span>
+              </div>
+              <div class="card-body">
+                <div class="row align-items-center mb-3">
+                  <div class="col">
+                    <a
+                      class="link-dark fw-bold"
+                      href="{{product.get_url}}"
+                      style="font-size: 14px"
+                      >{{product.product_name}}</a
+                    >
+                  </div>
+                  <div class="col-auto">
+                    <span
+                      ><i class="bi bi-star-fill me-1 text-warning"></i
+                      >{{product.average_review}}</span
+                    >
+                  </div>
+                </div>
+                <div class="row align-items-center">
+                  <div class="col">
+                    <p class="h5 fw-bold">
+                      ${{product.discount_price}}
+                      {% if product.price %}
+                      <del class="h6 fw-normal">${{product.price}}</del>
+                      {% endif %}
+                    </p>
+                  </div>
+                  <div class="col-auto">
+                    <a
+                      class="btn btn-sm btn-dark"
+                      href="{{product.get_url}}"
+                      >View Product</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      {% endfor %}
+      <!-- single item end -->
+    </div>
+  </div>
+</section>
+<!-- new arrivals section end -->
+
+<!-- our features section -->
+<section id="our-features-section" class="py-5 border-top">
+  <div class="container-fluid px-4">
+    <div class="row">
+      <div class="col-6 col-md-3 mb-5 mb-md-0">
+        <div class="text-center">
+          <img
+            class="mb-2"
+            src="{% static "images/icons/delivery.svg" %}"
+            width="80px"
+            alt=""
+          />
+          <p class="fw-bold">Free <span class="text-primary">Delivery</span></p>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3 mb-5 mb-md-0">
+        <div class="text-center">
+          <img class="mb-2" src="{% static "images/icons/shield.svg" %}" width="80px" alt="" />
+          <p class="fw-bold">Safe <span class="text-primary">Payments</span></p>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="text-center">
+          <img class="mb-2" src="{% static "images/icons/return.svg" %}" width="80px" alt="" />
+          <p class="fw-bold">Easy <span class="text-primary">Return</span></p>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="text-center">
+          <img
+            class="mb-2"
+            src="{% static "images/icons/verified.svg" %}"
+            width="80px"
+            alt=""
+          />
+          <p class="fw-bold">
+            Verified <span class="text-primary">Products</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- our features section end -->
+
+{% endblock content %}

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Place Order{% endblock title %}
+{% load static %}
+{% block content %}
+
+<!-- place order page -->
+<main id="place-order-page" class="py-5">
+  <div class="container-fluid px-4">
+    <div class="text-center">
+      <h4 class="fw-bold mb-4">Review Your Order and Make Payment</h4>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-8 mb-4 mb-md-0">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="fw-bold mb-3">Billing Address</h5>
+            <div style="font-size: 15px">
+              <p class="mb-1">
+                <em class="fw-bold">Name : </em>{{order.first_name}} {{order.last_name}}
+              </p>
+              <p class="mb-1">
+                <em class="fw-bold">Address : </em>{{order.address_line_1}}, {{order.address_line_2}}, {{order.city}} - {{order.pin_code}}, {{order.state}}, {{order.country}}
+              </p>
+              <p class="mb-1">
+                <em class="fw-bold">Email Address : </em>{{order.email}}
+              </p>
+              <p class="mb-1">
+                <em class="fw-bold">Phone Number : </em>{{order.phone_number}}
+              </p>
+              <p>
+                <em class="fw-bold">Order Note : </em>{{order.order_note}}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="fw-bold mb-3">Review Products</h5>
+            <table class="table mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th scope="col">Product</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in cart_items %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      {% if item.product.product_image_1 %}
+                      <img
+                      class="product-thumbnail me-2 d-none d-md-block"
+                      src="{{item.product.product_image_1.url}}"
+                      alt=""
+                      />
+                      {% endif %}
+                      <div style="font-size: 12px">
+                        <a class="link-dark fw-bold" href="{{item.product.get_url}}"
+                          >{{item.product.product_name}}</a
+                        >
+                        {% if item.variations.all %}
+                          {% for item in item.variations.all %}
+                          <p class="text-secondary">{{item.variation_category | capfirst}}: {{item.variation_value | capfirst}}</p>
+                          {% endfor %}
+                        {% endif %}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    {{item.quantity}}
+                  </td>
+                  <td>
+                    <p>${{item.subtotal}}</p>
+                    <p class="text-secondary" style="font-size: 14px">
+                      ${{item.product.discount_price}} Each
+                    </p>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              Sub Total:
+              <p>${{subtotal}}</p>
+              </div>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                Delivery Fee:
+                <p>${{delivery_fee}}</p>
+              </div>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                Tax:
+                <p>${{tax}}</p>
+              </div>
+              <hr />
+              <div class="d-flex align-items-center justify-content-between mb-4">
+                <p class="fw-bold">Grand Total:</p>
+                <p class="fw-bold">${{grand_total}}</p>
+              </div>
+              <div class="mb-4">
+                <img class="w-100" src="{% static "images/stripe.png" %}" alt="">
+              </div>
+              <form action="{% url "payment" %}">
+                <input type="hidden" name="order_number" value="{{order.order_number}}">
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-dark">Pay</button>
+                </div>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- place order page end -->
+
+{% endblock content %}

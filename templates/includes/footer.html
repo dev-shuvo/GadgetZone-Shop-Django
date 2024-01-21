@@ -1,0 +1,83 @@
+<!-- footer section -->
+<footer id="footer-section" class="border-top">
+  <!-- footer top -->
+  <div class="footer-top py-5">
+    <div class="container-fluid px-4">
+      <div class="row">
+        <div class="col-12 col-md-6 col-lg-3 mb-5 mb-lg-0">
+          {% if website.logo %}
+          <img class="mb-3" src="{{website.logo.url}}" width="250px" alt="" />
+          {% endif %}
+          <div class="text-secondary mb-3" style="font-size: 14px">
+           {{website.short_description|safe}}
+          </div>
+          <div class="socials">
+            <div class="d-flex align-items-center">
+              <a href="{{website.facebook}}" target="_blank"><i class="bi bi-facebook"></i></a>
+              <a href="{{website.whatsapp}}" target="_blank"><i class="bi bi-whatsapp"></i></a>
+              <a href="{{website.twitter}}" target="_blank"><i class="bi bi-twitter"></i></a>
+              <a href="{{website.instagram}}" target="_blank"><i class="bi bi-instagram"></i></a>
+              <a href="{{website.youtube}}" target="_blank"><i class="bi bi-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3 ps-lg-5 mb-4 mb-lg-0">
+          <h5 class="fw-bold mb-3">Categories</h5>
+          <ul style="font-size: 14px">
+            {% for category in categories %}
+            <li class="mb-2">
+              <a href="{{category.get_url}}">{{category.category_name}}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3 ps-lg-5 mb-4 mb-md-0">
+          <h5 class="fw-bold mb-3">Pages</h5>
+          <ul style="font-size: 14px">
+            <li class="mb-2">
+              <a href="{% url "index" %}">Home</a>
+            </li>
+
+            <li class="mb-2">
+              <a href="{% url "store" %}">Products</a>
+            </li>
+
+            <li class="mb-2">
+              <a href="{% url "login" %}">Login</a>
+            </li>
+            <li class="mb-2">
+              <a href="{% url "signup" %}">Signup</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3">
+          <h5 class="fw-bold mb-3">Our Location</h5>
+          <iframe
+            src="{{website.google_maps_embed}}"
+            width="100%"
+            height="200px"
+            class="border"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- footer top end -->
+
+  <!-- footer bottom -->
+  <div class="footer-bottom py-3 border-top">
+    <div class="container-fluid px-4">
+      <div class="text-center">
+        <p>&copy; GadgetZone {% now "Y" %}, All Rights Reserved</p>
+      </div>
+    </div>
+  </div>
+  <!-- footer bottom end -->
+</footer>
+<!-- footer section end -->

@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% block title %}Store{% endblock title %}
+{% block content %}
+
+<!-- all products page -->
+<main id="all-products-page" class="py-5">
+  <div class="container-fluid px-4">
+    <div class="row">
+      <!-- filters -->
+      <div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+        <div class="filters">
+          <div class="accordion">
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <button
+                  class="accordion-button collapsed fw-bold d-md-none"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#productFilters"
+                >
+                  <i class="bi bi-filter me-1 fs-3"></i>Filter Products
+                </button>
+              </div>
+              <div
+                id="productFilters"
+                class="accordion-collapse collapse not-collapsed"
+              >
+                <div class="accordion-body p-3">
+                  <h5 class="fw-bold d-none d-md-block mb-4">
+                    <i class="bi bi-filter me-1 fs-3"></i>Filter
+                    <span class="text-primary">Products</span>
+                  </h5>
+                  <form action="{% url "search" %}">
+                    <select
+                      class="form-select mb-4"
+                      name="order_by"
+                      autocomplete="off"
+                    >
+                      <option selected disabled>Order By</option>
+                      <option value="best_sellers">Best Sellers</option>
+                      <option value="low_to_high">Price: Low to High</option>
+                      <option value="high_to_low">Price: High to Low</option>
+                    </select>
+
+                    <select
+                      class="form-select mb-4"
+                      name="category"
+                      autocomplete="off"
+                    >
+                      <option selected disabled>Category</option>
+                      {% for category in categories %}
+                      <option value="{{category.id}}">{{category.category_name}}</option>
+                      {% endfor %}
+                    </select>
+                    <select
+                      class="form-select mb-4"
+                      name="warranty"
+                      autocomplete="off"
+                    >
+                      <option selected disabled>Warranty</option>
+                      {% for product in warranty %}
+                      <option value="{{product.warranty}}">{{product.warranty}} Years</option>
+                      {% endfor %}
+                    </select>
+                    <div class="d-grid">
+                      <button type="submit" class="btn btn-primary">
+                        Show Products
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- filters end -->
+
+      <!-- products -->
+      {% if products %}
+      <div class="col-12 col-md-8 col-lg-9">
+        <div class="products">
+          <div class="card">
+            <div class="card-body p-4">
+              <div class="d-flex align-items-center mb-4">
+                <h5 class="fw-bold me-1">
+                  All <span class="text-primary">Products</span>
+                </h5>
+                <span class="fw-bold text-secondary">({{products_count}} Items)</span>
+              </div>
+              <div class="row">
+                <!-- single item -->
+                {% for product in products %}
+                <div class="col-12 col-sm-6 col-lg-4 mb-4">
+                  <div class="single-item">
+                    <div class="card rounded-0">
+                      <div class="card-img-wrapper">
+                        <a href="{{product.get_url}}">
+                          {% if product.product_image_1 %}
+                          <img class="border-bottom" src="{{product.product_image_1.url}}" alt="" />
+                          {% endif %}
+                        </a>
+                        {% if product.best_seller %}
+                        <span class="best-badge"><i class="bi bi-award"></i></span>
+                        {% endif %}
+                      </div>
+                      <div class="card-body">
+                        <div class="row align-items-center mb-3">
+                          <div class="col">
+                            <a
+                              class="link-dark fw-bold"
+                              href="{{product.get_url}}"
+                              style="font-size: 14px"
+                              >{{product.product_name}}</a
+                            >
+                          </div>
+                          <div class="col-auto">
+                            <span
+                              ><i class="bi bi-star-fill me-1 text-warning"></i
+                              >{{product.average_review}}</span
+                            >
+                          </div>
+                        </div>
+                        <div class="row align-items-center">
+                          <div class="col">
+                            <p class="h5 fw-bold">
+                              ${{product.discount_price}}
+                              {% if product.price %}
+                              <del class="h6 fw-normal">${{product.price}}</del>
+                              {% endif %}
+                            </p>
+                          </div>
+                          <div class="col-auto">
+                            <a
+                              class="btn btn-sm btn-dark"
+                              href="{{product.get_url}}"
+                              >View Product</a
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <!-- single item end -->
+              </div>
+            </div>
+          </div>
+          <!-- pagination -->
+          {% if products.has_other_pages %}
+          <div class="card p-4 mt-4">
+            <nav class="m-auto">
+              <ul class="pagination mb-0">
+                {% if products.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{products.previous_page_number}}">Previous</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                  <a class="page-link" href="#">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for i in products.paginator.page_range %}
+                  {% if products.number == i %}
+                    <li class="page-item">
+                      <a class="page-link active" href="#">{{i}}</a>
+                    </li>
+                  {% else %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{i}}">{{i}}</a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+                {% if products.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{products.next_page_number}}">Next</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                  <a class="page-link" href="#">Next</a>
+                </li>
+                {% endif %}
+              </ul>
+            </nav>
+          </div>
+          {% endif %}
+          <!-- pagination end -->
+        </div>
+      </div>
+      {% else %}
+      <div class="col-12 col-md-8 col-lg-9">
+        <div class="card">
+          <div class="card-body text-center py-5">
+            <p class="fs-2 mb-4">No products found</p>
+            <a href="{% url "store" %}" class="btn btn-primary border"
+              >View All Products</a
+            >
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <!-- products end -->
+    </div>
+  </div>
+</main>
+<!-- all products page end -->
+
+{% endblock content %}

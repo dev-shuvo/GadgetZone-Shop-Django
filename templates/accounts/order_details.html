@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}{{order.order_number}}{% endblock title %}
+{% block content %}
+
+<!-- dashboard page -->
+<main id="dashboard-page" class="py-5">
+  <div class="container-fluid px-4">
+    <div class="alert alert-primary mb-4" role="alert">
+      <div class="d-flex align-items-center justify-content-between">
+        <h5 class="fw-bold">
+          Welcome, <span class="text-primary">{{user.first_name}} {{user.last_name}}</span>
+        </h5>
+        <button onclick="history.back()" class="btn btn-warning">
+        <i class="bi bi-arrow-left me-1"></i>Back
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="tab-content bg-white p-4 rounded border">
+          <h5 class="fw-bold text-primary mb-3"><span class="text-dark">Order:</span> #{{order.order_number}}</h5>
+          <div class="mb-3" style="font-size: 14px">
+            <h6 class="fw-bold mb-2 text-primary">Invoiced To:</h6>
+            <p><em class="fw-bold">Name :</em> {{order.first_name}} {{order.last_name}}</p>
+            <p>
+              <em class="fw-bold">Address :</em> {{order.address_line_1}}, {{order.address_line_2}}, {{order.city}} - {{order.pin_code}}, {{order.state}}, {{order.country}}
+            </p>
+            <p><em class="fw-bold">Email Address :</em> {{order.email}}</p>
+            <p><em class="fw-bold">Phone Number :</em> {{order.phone_number}}</p>
+          </div>
+          <div class="mb-4" style="font-size: 14px">
+            <h6 class="fw-bold mb-2 text-primary">Order Details:</h6>
+            <p><em class="fw-bold">Order No :</em> #{{order.order_number}}</p>
+            <p>
+              <em class="fw-bold">Order Date :</em> {{order.created_at}}
+            </p>
+            <p>
+              <em class="fw-bold">Order Note :</em> {{order.order_note}}
+            </p>
+            <p><em class="fw-bold">Transaction ID :</em> {{order.payment.transaction_id}}</p>
+            <p><em class="fw-bold">Status :</em> {{order.payment.status}}</p>
+          </div>
+
+          <table class="table mb-4 table-light" style="font-size: 14px">
+            <thead>
+              <tr>
+                <th class="text-primary" scope="col">Product</th>
+                <th class="text-primary" scope="col">Warranty</th>
+                <th class="text-primary" scope="col">Quantity</th>
+                <th class="text-primary" scope="col">Total Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in ordered_items %}
+              <tr>
+                <td>
+                  <p class="fw-bold">{{item.product.product_name}}</p>
+                  {% for variation in item.product.variation_set.colors %}
+                  <p class="text-secondary">{{variation.variation_category | capfirst}}: {{variation.variation_value | capfirst}}</p>
+                  {% endfor %}
+                </td>
+                <td>{{item.product.warranty}} Years</td>
+                <td>
+                  <span>{{item.quantity}}</span>
+                  <span>x</span>
+                  <span>${{item.product.discount_price}}</span>
+                </td>
+                <td>
+                  <p>${{item.total_amount}}</p>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th class="border-0"></th>
+                <th class="border-0"></th>
+                <th>Sub Total</th>
+                <th>${{subtotal}}</th>
+              </tr>
+              <tr>
+                <th class="border-0"></th>
+                <th class="border-0"></th>
+                <th>Tax</th>
+                <th>${{order.tax}}</th>
+              </tr>
+              <tr>
+                <th class="border-0"></th>
+                <th class="border-0"></th>
+                <th>Delivery Fee</th>
+                <th>${{order.delivery_fee}}</th>
+              </tr>
+              <tr>
+                <th class="border-0"></th>
+                <th class="border-0"></th>
+                <th class="text-primary">Grand Total</th>
+                <th class="text-primary">${{order.grand_total}}</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- dashboard page end -->
+
+{% endblock content %}

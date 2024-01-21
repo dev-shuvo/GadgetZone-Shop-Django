@@ -1,0 +1,145 @@
+{% load static %}
+
+<!-- header section -->
+<header id="header-section">
+  <!-- header top -->
+  <div class="header-top py-2 border-bottom">
+    <div class="container-fluid px-4">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <a href="mailto:{{website.email}}" class="link-secondary"
+            ><i class="bi bi-headset me-1"></i>Support</a
+          >
+        </div>
+        <div class="col text-end">
+          {% if not user.is_authenticated %}
+          <a href="{% url "login" %}" class="link-secondary">Login</a>
+          <span class="mx-1 text-primary">/</span>
+          <a href="{% url "signup" %}" class="link-secondary">Signup</a>
+          {% else %}
+          <a class="btn btn-outline-primary btn-sm me-2" href="{% url "dashboard" %}"
+              ><i class="bi bi-speedometer me-1"></i>Dashboard</a
+            >
+          <a href="{% url "logout" %}" class="btn btn-danger btn-sm">
+            <i class="bi bi-box-arrow-right me-1"></i>Logout
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- header top end -->
+
+  <!-- main menu -->
+  <div class="main-menu navbar py-3 shadow">
+    <div class="container-fluid px-4">
+      <a href="{% url "index" %}">
+        {% if website.logo %}
+        <img src="{{website.logo.url}}" width="200px" alt="" />
+        {% endif %}
+      </a>
+      <form action="{% url "search" %}" class="ms-auto d-none d-md-block">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Eg: Mobile Phone"
+            name="keyword"
+          />
+          <button type="submit" class="btn btn-light input-group-text border">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </form>
+      <a href="{% url "cart" %}" class="cart position-relative ms-auto me-4">
+        <i class="bi bi-bag"></i>
+        <span
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+        >
+          {{cart_count}}
+        </span>
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#mainMenu"
+      >
+        <span class="bi bi-list"></span>
+      </button>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="mainMenu">
+        <div class="offcanvas-header">
+          {% if website.logo %}
+          <img src="{{website.logo.url}}" width="180px" alt="" />
+          {% endif %}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+          ></button>
+        </div>
+        <div class="offcanvas-body">
+          <div class="categories mb-5">
+            <h5 class="fw-bold mb-3">Categories</h5>
+            <div class="row mx-0">
+              {% for category in categories %}
+              <a href="{{category.get_url}}" class="col-4 p-0">
+                <div class="single-item">
+                  {% if category.category_image %}
+                  <img src="{{category.category_image.url}}" alt="" />
+                  {% else %}
+                  <img src="{% static "images/image-placeholder.png" %}" alt="" />
+                  {% endif %}
+                  <span>{{category.category_name}}</span>
+                </div>
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="links mb-5">
+            <h5 class="fw-bold mb-3">Pages</h5>
+            <ul>
+              <li>
+                <a href="{% url "store" %}">Store</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="socials mb-5">
+            <h5 class="fw-bold mb-3">Socials</h5>
+            <div class="d-flex align-items-center">
+              <a href="{{website.facebook}}" target="_blank"><i class="bi bi-facebook"></i></a>
+              <a href="{{website.whatsapp}}" target="_blank"><i class="bi bi-whatsapp"></i></a>
+              <a href="{{website.twitter}}" target="_blank"><i class="bi bi-twitter"></i></a>
+              <a href="{{website.instagram}}" target="_blank"><i class="bi bi-instagram"></i></a>
+              <a href="{{website.youtube}}" target="_blank"><i class="bi bi-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- main menu end -->
+
+  <!-- mobile search -->
+  <div class="py-3 d-md-none border-bottom">
+    <div class="container-fluid px-4">
+      <form action="{% url "search" %}">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Eg: Mobile Phone"
+            name="keyword"
+          />
+          <button type="submit" class="btn btn-light input-group-text border">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- mobile search end -->
+</header>
+<!-- header section end -->

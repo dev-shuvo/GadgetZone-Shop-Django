@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}Cart{% endblock title %}
+{% block content %}
+
+<!-- cart page -->
+<main id="cart-page" class="py-5">
+  <div class="container-fluid px-4">
+    <div class="row">
+      {% if not cart_items %}
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body text-center py-5">
+            <p class="fs-2 mb-4">Your cart is empty</p>
+            <a href="{% url "store" %}" class="btn btn-primary border"
+              >Continue Shopping</a
+            >
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-12 col-lg-8 mb-4 mb-lg-0">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="fw-bold mb-3">
+              Your <span class="text-primary">Cart</span>
+            </h4>
+            <table class="table mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th scope="col">Product</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in cart_items %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      {% if item.product.product_image_1 %}
+                      <img
+                      class="product-thumbnail me-2 d-none d-md-block"
+                      src="{{item.product.product_image_1.url}}"
+                      alt=""
+                      />
+                      {% endif %}
+                      <div style="font-size: 12px">
+                        <a class="link-dark fw-bold" href="{{item.product.get_url}}"
+                          >{{item.product.product_name}}</a
+                        >
+                        {% if item.variations.all %}
+                          {% for item in item.variations.all %}
+                          <p class="text-secondary">{{item.variation_category | capfirst}}: {{item.variation_value | capfirst}}</p>
+                          {% endfor %}
+                        {% endif %}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <a style="font-size: 31px; margin-right: 5px;" href="{% url "add_to_cart" item.product.id %}"><i class="bi bi-plus-square-fill"></i></a>
+                      <input
+                        class="form-control form-control-sm"
+                        type="text"
+                        style="width: 40px; text-align: center;"
+                        value="{{item.quantity}}"
+                      />
+                      <a style="font-size: 31px; margin-left: 5px;" href="{% url "minus_from_cart" item.product.id %}"><i class="bi bi-dash-square-fill"></i></a>
+                    </div>
+                  </td>
+                  <td>
+                    <p>${{item.subtotal}}</p>
+                    <p class="text-secondary" style="font-size: 14px">
+                      ${{item.product.discount_price}} Each
+                    </p>
+                  </td>
+                  <td>
+                    <a href="{% url "delete_cart_item" item.product.id item.id %}" class="btn btn-sm btn-danger">
+                      <i class="bi bi-trash-fill"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              Sub Total:
+              <p>${{subtotal}}</p>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              Delivery Fee:
+              <p>${{delivery_fee}}</p>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              Tax:
+              <p>${{tax}}</p>
+            </div>
+            <hr />
+            <div class="d-flex align-items-center justify-content-between mb-4">
+              <p class="fw-bold">Grand Total:</p>
+              <p class="fw-bold">${{grand_total}}</p>
+            </div>
+            <div class="d-grid">
+              <a href="{% url "checkout" %}" class="btn btn-primary mb-2">Checkout</a>
+              <a href="{% url "store" %}" class="btn btn-light border"
+                >Continue Shopping</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</main>
+<!-- cart page end -->
+
+{% endblock content %}

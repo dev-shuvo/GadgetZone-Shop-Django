@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Order Cancelled{% endblock title %}
+{% load static %}
+{% block content %}
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-center" style="height: 60vh;">
+      <div class="text-center">
+        <img class="mb-3" src="{% static "images/icons/cancel.svg" %}" width="150px" alt="">
+        <h2 class="fw-bold mb-3">Order Cancelled!</h2>
+        <a class="btn btn-primary" href="{% url "store" %}">Continue Shopping</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% endblock content %}
